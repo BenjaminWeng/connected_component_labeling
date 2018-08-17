@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( 4_connect )
+#find_package( OpenCV REQUIRED )
+add_executable( 4_connect 4_connected_component.cpp )
+#target_link_libraries( stereo_match ${OpenCV_LIBS} )
