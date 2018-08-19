@@ -3,46 +3,41 @@ public:
     int numIslands(vector<vector<char>>& grid) {
         if(grid.empty() || grid[0].empty())
             return 0;
-        int n=grid.size();
-        int m=grid[0].size();
         
-        int i,j,sum;
-        sum=0;
-        for(i=0;i<n;i++)
-        {
-            for(j=0;j<m;j++)
-            {
-                if(grid[i][j]=='1')
-                {
-                    sum++;
-                    bfs(i,j,grid,n,m);
-                }
-            }
-        }
-        return sum;
-    }
+        vector<vector<char>> label(grid.size(), vector<char>(grid[0].size(), 0));
+        int res = 0;
+
+        for(int i=0;i<grid.size();i++)
+            for(int j=0;j<grid[0].size();j++)
+                if(grid[i][j]=='1' && !label[i][j])
+                    bfs(i,j,grid, label, ++res);
+
+        return res;
+    }    
     
-    
-    void bfs(int x,int y,vector<vector<char>> &grid,int n,int m)
+    void bfs(int x,int y,vector<vector<char>> &grid, vector<vector<char>> &label, int res)
     {
         const int dx[] = {1, 0, -1, 0};
         const int dy[] = {0, 1, 0, -1};
+        int m=grid.size();
+        int n=grid[0].size();
         
         queue<int> q;
-        q.push(x*m+y);
-        grid[x][y]='0';
+        q.push(x*n+y);
+        label[x][y] = res;
+        
         while(!q.empty())
         {
-            int cur=q.front();
+            int cur = q.front();
             q.pop();
-            int xx=cur/m;
-            int yy=cur%m;
+            int xx = cur/n, yy = cur%n;
             
             for (int i=0; i<4; i++)
-                if (xx+dx[i]<n&&xx+dx[i]>=0&&yy+dy[i]<m&&yy+dy[i]>=0&&grid[xx+dx[i]][yy+dy[i]]=='1')
+                if (xx+dx[i]>=0 && xx+dx[i]<m && yy+dy[i]>=0 && yy+dy[i]<n &&
+                    grid[xx+dx[i]][yy+dy[i]]=='1' && !label[xx+dx[i]][yy+dy[i]])
                 {
-                    q.push((xx+dx[i])*m+(yy+dy[i]));
-                    grid[xx+dx[i]][yy+dy[i]]='0';
+                    q.push((xx+dx[i])*n + yy+dy[i]);
+                    label[xx+dx[i]][yy+dy[i]] = res;
                 }
         }
     }
